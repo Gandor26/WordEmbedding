@@ -70,7 +70,7 @@ def sigmoid(x):
         return 1/(1+np.exp(-x))
 
 class model(object):
-    def __init__(self, corpus_file, vocab_file, vector_dim=300, learning_rate=1e-3, alpha=.75, num_nsamples=5):
+    def __init__(self, corpus_file, vocab_file, vector_dim=100, learning_rate=1e-3, alpha=.75, num_nsamples=5):
         self.target_words = list()
         for line in corpus_gen(vocab_file):
             word = line.strip().split()[0].lower()
@@ -112,14 +112,12 @@ class model(object):
                 self.g_sq_emb_w[center_token] += np.square(g_w)
         return nll / len(self.samples)
 
-    def train(self, epoch=50, load=False, ckpt_file=None):
-        if load:
-            if ckpt_file is None:
-                raise ValueError('Checkpoint file must be provided if loading pretrained embeddings')
-            self.load_model(ckpt_file)
-        else:
+    def train(self, epoch=50, ckpt_file=None):
+        if ckpt_file is None:
             self.emb_w = np.random.uniform(-.5, .5, size=(self.vocab_size, self.vector_dim))
             self.emb_c = np.random.uniform(-.5, .5, size=(self.vocab_size, self.vector_dim))
+        else:
+            self.load_model(ckpt_file)
         self.g_sq_emb_w = np.ones((self.vocab_size, self.vector_dim))
         self.g_sq_emb_c = np.ones((self.vocab_size, self.vector_dim))
 

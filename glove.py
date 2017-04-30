@@ -104,16 +104,14 @@ class model(object):
 
         return loss/len(self.cooc)
 
-    def train(self, epoch=50, merge=True, load=False, ckpt_file=None):
-        if load:
-            if ckpt_file is None:
-                raise ValueError('Checkpoint file must be provided if loading pretrained embeddings')
-            self.load_model(ckpt_file)
-        else:
+    def train(self, epoch=50, merge=True, ckpt_file=None):
+        if ckpt_file is None:
             self.emb_w = np.random.uniform(-.5, .5, size=(self.vocab_size, self.vector_dim))
             self.emb_c = np.random.uniform(-.5, .5, size=(self.vocab_size, self.vector_dim))
             self.bias_w = np.random.uniform(-.5, .5, size=self.vocab_size)
             self.bias_c = np.random.uniform(-.5, .5, size=self.vocab_size)
+        else:
+            self.load_model(ckpt_file)
         self.g_sq_emb_w = np.ones((self.vocab_size, self.vector_dim))
         self.g_sq_emb_c = np.ones((self.vocab_size, self.vector_dim))
         self.g_sq_bias_w = np.ones(self.vocab_size)

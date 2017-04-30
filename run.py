@@ -25,13 +25,13 @@ def corpus_download(filename, expected_bytes=31344016):
     return filename
 
 def run(corpus_file, vocab_file, output_file):
-    model = Model(corpus_file, vocab_file)
-    model.train(epoch=EPOCH)
+    model = Model(corpus_file, vocab_file, VECTOR_DIM, LEARNING_RATE)
+    model.train(epoch=EPOCH, ckpt_file=CKPT)
     model.output(output_file)
 
 def main():
-    #corpus_file = corpus_download('text8.zip')
-    corpus_file = './test'
+    corpus_file = corpus_download('text8.zip')
+    #corpus_file = './test'
     vocab_file = './vocab.txt'
     output_file = './vector.txt'
     run(corpus_file, vocab_file, output_file)
@@ -42,8 +42,10 @@ if __name__ == '__main__':
     parser.add_argument('-e', '--epoch', type=int, nargs='?', default=50, help='train epochs')
     parser.add_argument('-d', '--dim', type=int, nargs='?', default=100, help='vector dimension')
     parser.add_argument('-lr', '--learning_rate', type=float, nargs='?', default=1e-3, help='learning rate')
+    parser.add_argument('-c', '--checkpoint', type=str, nargs='?', help='checkpoint file')
     args = parser.parse_args()
 
+    CKPT = args.checkpoint
     VECTOR_DIM = args.dim
     LEARNING_RATE = args.learning_rate
     EPOCH = args.epoch
